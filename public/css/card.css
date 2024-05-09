@@ -1,10 +1,7 @@
 body{
     overflow-x: hidden;
 }
-
-
 .card {
-
     background-color: beige;
     padding: 40px;
 }
@@ -72,4 +69,15 @@ body{
     .card-detail{
         width: 100%;
     }
+}
+.comment-section {
+    margin-top: 20px;
+}
+.comment-input {
+    width: 70%;
+    padding: 10px;
+    margin-right: 5px;
+}
+.comments-container {
+    margin-top: 10px;
 }

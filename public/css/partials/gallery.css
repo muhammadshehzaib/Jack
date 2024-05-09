@@ -9,7 +9,8 @@
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     place-items: center;
-    row-gap: 25px;
+    gap: 25px;
+    
 }
 .heart-icon{
     display: flex;

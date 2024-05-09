@@ -25,13 +25,12 @@
             </button>
             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
               <li><a class="dropdown-item" href="#" onclick="sortCardsByName()">a-z</a></li>
-              <li><a class="dropdown-item" href="#">name</a></li>
-              <li><a class="dropdown-item" href="#">HP</a></li>
+              <li><a class="dropdown-item" href="#"  onclick="sortCardsByNameDesc()">z-a</a></li>
             </ul>
           </div>
           
         </div>
-          <div id="cardsContainer">
+          <div id="cardsContainer" class="card-container" >
             <!-- Cards will be dynamically inserted here -->
         </div>
 
@@ -54,7 +53,10 @@
             .then(data => {
                 const cards = data.cards.flat();  // Access the 'cards' array from the response
                 const container = document.getElementById('cardsContainer');
+                const galleryContainer = document.getElementById('gallery');
+
                 container.innerHTML = ''; // Clear previous results
+                galleryContainer.style.display = 'none'; // Hide gallery during search
 
                 // Check if cards is an array and has content
                 if (Array.isArray(cards) && cards.length > 0) {
@@ -62,10 +64,9 @@
 
                   slicedCards.forEach(card => {
                         const cardElement = document.createElement('div');
-                        cardElement.className = 'card';
+                        cardElement.className = 'cards';
                         cardElement.innerHTML = `
                         <a href="/card/${card.id}">
-                                <div class="col-3">
                                     <div class="card" style="width: 18rem;">
                                         <img src="/public/Images/wallpaper-50.jpg" class="card-img-top" alt="${card.name}">
                                         <p class="muted text-muted px-2">${card.name}</p>
@@ -80,7 +81,6 @@
                                     <div class="heart-icon">
                                         <img src="../../../public/Images/heart.png">
                                     </div>
-                                </div>
                             </a>`;
                         container.appendChild(cardElement);
                     });

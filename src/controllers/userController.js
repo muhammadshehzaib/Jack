@@ -38,6 +38,51 @@ exports.doLogin = async (req, res) => {
       res.status(401).json({ message: 'Invalid credentials' });
   }
 };
+exports.getCommentsByCardId = async(req,res)=>{
+  try{  
+    const { cardId } = req.params;
+    const comments = await Member.getCommentsByCardId(cardId);
+
+    if (!comments.length) {
+      return res.status(404).json({ message: 'No comments found for this card' });
+  } 
+  res.json(comments);
+} catch (error) {
+  console.error(error);
+  res.status(500).json({ message: 'Error fetching comments', error: error.message });
+}
+}
+
+exports.postComment = async(req,res)=>{
+  try{
+  const { comment } = req.body;
+  const { memberId, isLoggedIn } = req.session;
+
+  // Check if user is logged in
+  if (!memberId) {
+      return res.status(403).send('You must be logged in to post comments');
+  }
+
+  // Validate the comment text
+  if (!comment || comment.trim().length === 0) {
+      return res.status(400).send('Comment text cannot be empty');
+  }
+
+  const commentId = await Member.createComment(memberId,comment);
+  res.json({ message: 'Comment successful', commentId: commentId });
+
+} catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Failed to post comment', error: error.message });
+
+  }
+
+};
+exports.getSessionStatus = (req, res) => {
+  res.json({
+      isLoggedIn: req.session.isLoggedIn || false
+  });
+}; 
 
 
 exports.getMember = async (req, res) => {
@@ -76,4 +121,6 @@ exports.updateMember = async (req, res) => {
     res.status(500).json({ message: 'Error updating member', error: error.message });
   }
 };
+
+
 

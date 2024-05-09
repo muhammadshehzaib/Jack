@@ -32,7 +32,7 @@
     app.use(cardRoutes);
     app.use(indexRoutes);
     app.use(profileRoutes);
-
+            
 
     // Start the server
     app.listen(PORT, () => {

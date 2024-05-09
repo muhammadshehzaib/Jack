@@ -38,6 +38,25 @@ class Member {
         );
         return result;
       }
+      static async createComment(memberId, comment) {
+        try {
+            const query = `INSERT INTO comments (MemberID, Comment) VALUES (?, ?)`;
+            const [result] = await db.execute(query, [memberId, comment]);
+            return result.insertId;
+        } catch (err) {
+            throw err;
+        }
+    }
+    static async getCommentsByCardId(cardId) {
+        try {
+            const query = `SELECT * FROM comments`;
+            const [results] = await db.execute(query, [cardId]);
+            return results;
+        } catch (err) {
+            throw err;
+        }
+    }
+    
 }
 
 module.exports = Member;

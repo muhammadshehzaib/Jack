@@ -3,148 +3,153 @@
 
 
 <%- include('partials/navbar.ejs') %>
-<div class="card">
-    <div class="card-info">
-    <div class="image">
-        <div style="border: 1px solid gray;">
-        <img
-        style="width: 100%;height:500px;object-fit: cover;"
-          src="/public/Images/wallpaper-50.jpg"
-          class="card-img-top"
-          alt="..."
-        />
+    <div class="card">
+        <div class="card-info">
+            <div class="image">
+                <div style="border: 1px solid gray;">
+                    <img style="width: 100%;height:500px;object-fit: cover;" src="/public/Images/wallpaper-50.jpg"
+                        class="card-img-top" alt="..." />
+                </div>
+                <div class="heart-icon">
+                    <img src="../../../public/Images/heart.png"><img />
+                </div>
+                <h2 id="name"></h2>
+                <div class="">
+                    <p style="max-width: 100%;" class="card-title-here" id="title"></p>
+                </div>
+            </div>
+            <div class="card-detail">
+                <div style="display: flex;justify-content:space-between;">
+                    <h2 style="color: black;" id="cardTitle"></h2>
+
+                    <div style="display: flex;align-items: center;column-gap: 5px;">
+                        <span>HP </span>
+                        <h2 id="hp"></h2>
+                    </div>
+                </div>
+                <div style="display: flex;justify-content: space-between;">
+                    <h5 id="category"></h5>
+                    <h5 style="margin: 0;" id="stage"></h5>
+                </div>
+
+
+                <div id="attack">
+
+                </div>
+
+
+                <div id="all-about-card">
+                    <div class="container" style="display: flex;flex-direction: column;">
+                        <h5>Weaknesses</h5>
+                        <div class="bold" id="weak"></div>
+                    </div>
+
+                    <div class="container" style="display: flex;flex-direction: column;">
+                        <h5>Resistance</h5>
+                        <div class="bold" id="resistance"></div>
+                    </div>
+
+                    <div class="container" style="display: flex;flex-direction: column;">
+                        <h5>Retreat Cost</h5>
+                        <div class="bold" id="retreatCost"></div>
+                    </div>
+
+                    <div class="container" style="display: flex;flex-direction: column;">
+                        <h5>Expansion Cost</h5>
+                        <div class="bold" id="expansion"></div>
+                    </div>
+
+
+                    <div class="container" style="display: flex;flex-direction: column;">
+                        <h5>Card Number</h5>
+                        <div class="bold" id="cardNo"></div>
+                    </div>
+
+                    <div class="container" style="display: flex;flex-direction: column;">
+                        <h5>Rarity</h5>
+                        <div class="bold" id="rarity"></div>
+                    </div>
+
+                    <div class="container" style="display: flex;flex-direction: column;">
+                        <h5>Illustrator</h5>
+                        <div class="bold" id="illustrator"></div>
+                    </div>
+
+
+                    <div class="container" style="display: flex;flex-direction: column;">
+                        <h5>Card Format</h5>
+                        <div class="bold" id="cardFormat"></div>
+                    </div>
+
+                    <div class="container" style="display: flex;flex-direction: column;">
+                        <h5>Regulation Mark</h5>
+                        <div class="bold" id="regulationMark"></div>
+                    </div>
+
+                </div>
+
+
+            </div>
+        </div>
+        <div class="comment-section">
+            <h3>Comments</h3>
+            <input type="text" id="commentInput" placeholder="Add a comment..." class="comment-input">
+            <button onclick="submitComment()">Post Comment</button>
+            <div id="commentsContainer" class="comments-container">
+                <!-- Comments will be displayed here -->
+            </div>
+        </div>
     </div>
-        <div class="heart-icon" >
-            <img src="../../../public/Images/heart.png" ><img/>
-        </div>
-        <h2 id="name"></h2>
-        <div
-          class=""
-        >
-          <p style="max-width: 100%;" class="card-title-here" id="title"></p>
     </div>
-    </div>  
-    <div class="card-detail" >
-        <div style="display: flex;justify-content:space-between;">
-        <h2 style="color: black;" id="cardTitle"></h2>
-       
-        <div style="display: flex;align-items: center;column-gap: 5px;">
-            <span>HP </span><h2 id="hp"></h2>
-        </div>
-    </div>
-        <div style="display: flex;justify-content: space-between;">
-            <h5 id="category"></h5>
-            <h5 style="margin: 0;" id="stage"></h5>
-        </div>
-        
-        
-      <div id="attack">
+    <%- include('partials/footer.ejs') %>
 
-      </div>
-     
-        
-      <div id="all-about-card">
-        <div class="container" style="display: flex;flex-direction: column;">
-            <h5>Weaknesses</h5>
-            <div class="bold" id="weak"></div>
-        </div>
-    
-        <div class="container" style="display: flex;flex-direction: column;">
-            <h5>Resistance</h5>
-            <div class="bold" id="resistance"></div>
-        </div>
-        
-        <div class="container" style="display: flex;flex-direction: column;">
-            <h5>Retreat Cost</h5>
-            <div class="bold" id="retreatCost"></div>
-        </div>
+        <script>
 
-        <div class="container" style="display: flex;flex-direction: column;">
-            <h5>Expansion Cost</h5>
-            <div class="bold" id="expansion"></div>
-        </div>
-      
-      
-        <div class="container" style="display: flex;flex-direction: column;">
-            <h5>Card Number</h5>
-            <div class="bold" id="cardNo"></div>
-        </div>
+            // Function to fetch card data
+            const fetchCardData = async () => {
+                try {
+                    // Extract the ID from the URL
+                    const url = window.location.pathname;
+                    const id = url.split('/')[2];
 
-        <div class="container" style="display: flex;flex-direction: column;">
-            <h5>Rarity</h5>
-            <div class="bold" id="rarity"></div>
-        </div>
-        
-        <div class="container" style="display: flex;flex-direction: column;">
-            <h5>Illustrator</h5>
-            <div class="bold" id="illustrator"></div>
-        </div>
-       
-        
-        <div class="container" style="display: flex;flex-direction: column;">
-            <h5>Card Format</h5>
-            <div class="bold" id="cardFormat"></div>
-        </div>
+                    // Make a fetch request using the extracted ID
+                    const response = await fetch(`https://api.tcgdex.net/v2/en/cards/${id}`);
 
-        <div class="container" style="display: flex;flex-direction: column;">
-            <h5>Regulation Mark</h5>
-            <div class="bold" id="regulationMark"></div>
-        </div>
-      
-      </div>
-        
+                    // Check if the response is ok
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
 
-    </div>
-</div>
-</div>
-</div>
-<%- include('partials/footer.ejs') %>
+                    // Parse response JSON
+                    const card = await response.json();
+                    fetchComments();  // Ensure this is the last line in your try block
 
-<script>
-    // Function to fetch card data
-    const fetchCardData = async () => {
-        try {
-            // Extract the ID from the URL
-            const url = window.location.pathname;
-            const id = url.split('/')[2];
 
-            // Make a fetch request using the extracted ID
-            const response = await fetch(`https://api.tcgdex.net/v2/en/cards/${id}`);
-  
-            // Check if the response is ok
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
+                    console.log(card);
+                    console.log('card')
 
-            // Parse response JSON
-            const card = await response.json();
-            
+                    // Update the card details in the HTML
+                    document.getElementById('cardTitle').innerText = card.name; // Assuming name is the title
 
-            console.log(card);
-            console.log('card')
+                    document.getElementById('name').innerHTML = card.name;
+                    document.getElementById('title').innerHTML = card.description;
 
-            // Update the card details in the HTML
-            document.getElementById('cardTitle').innerText = card.name; // Assuming name is the title
+                    document.getElementById('hp').innerHTML = card.hp;
+                    document.getElementById('stage').innerHTML = card.stage;
+                    document.getElementById('category').innerHTML = card.category;
+                    const attacks = card.attacks;
 
-            document.getElementById('name').innerHTML = card.name; 
-            document.getElementById('title').innerHTML = card.description; 
-            
-            document.getElementById('hp').innerHTML = card.hp; 
-            document.getElementById('stage').innerHTML = card.stage; 
-            document.getElementById('category').innerHTML = card.category; 
-            const attacks = card.attacks;
-
-            const attackHtml = `
+                    const attackHtml = `
                 <div style="display: flex;flex-direction:column;justify-content: space-between;">
                 <h3>${attacks[0].name}</h3>
                 <h5>${attacks[0].effect || ''}</h5>
                 </div>
                 `;
 
-                document.getElementById('attack').insertAdjacentHTML('beforeend', attackHtml);
-                
-               if(attacks.length>1){
-                const attack2Html = `
+                    document.getElementById('attack').insertAdjacentHTML('beforeend', attackHtml);
+
+                    if (attacks.length > 1) {
+                        const attack2Html = `
                 <div style="display: flex;flex-direction:row;justify-content: space-between;">
                 <h3>${attacks[1].name}</h3>
                 <h5 style="fontWeight:bold">${attacks[1].damage}</h5>
@@ -152,29 +157,102 @@
                 <h5>${attacks[1].effect || ''}</h5>
                 `;
 
-                document.getElementById('attack').insertAdjacentHTML('beforeend', attack2Html);
+                        document.getElementById('attack').insertAdjacentHTML('beforeend', attack2Html);
 
-               }
-                
-        
-            document.getElementById('weak').innerText = card.weaknesses.length+'x';
-    
-            document.getElementById('resistance').innerText=card.resistance || '__'
-            document.getElementById('retreatCost').innerHTML=card.retreatCost || '__';
-            document.getElementById('expansion').innerHTML=card.expansion || '__';
-            document.getElementById('cardNo').innerHTML=card.cardNo || '__';
-            document.getElementById('rarity').innerHTML=card.rarity || '__';
-            document.getElementById('illustrator').innerHTML=card.illustrator || '__';
-            document.getElementById('cardFormat').innerHTML=card.cardFormat || '__';
-            document.getElementById('regulationMark').innerHTML=card.regulationMark || '__';
-        } catch (error) {
-            console.error(error);
-            // Handle the error, e.g., display an error message to the user
-        }
-    };
-
-    // Call the fetchCardData function
-    fetchCardData();
-</script>
+                    }
 
 
+                    document.getElementById('weak').innerText = card.weaknesses.length + 'x';
+
+                    document.getElementById('resistance').innerText = card.resistance || '__'
+                    document.getElementById('retreatCost').innerHTML = card.retreatCost || '__';
+                    document.getElementById('expansion').innerHTML = card.expansion || '__';
+                    document.getElementById('cardNo').innerHTML = card.cardNo || '__';
+                    document.getElementById('rarity').innerHTML = card.rarity || '__';
+                    document.getElementById('illustrator').innerHTML = card.illustrator || '__';
+                    document.getElementById('cardFormat').innerHTML = card.cardFormat || '__';
+                    document.getElementById('regulationMark').innerHTML = card.regulationMark || '__';
+                } catch (error) {
+                    console.error(error);
+                    // Handle the error, e.g., display an error message to the user
+                }
+            };
+
+            // Call the fetchCardData function
+            fetchCardData();
+
+            async function checkLoginStatus() {
+                try {
+                    const response = await fetch('/api/session-status');
+                    if (!response.ok) throw new Error('Failed to fetch session status');
+                    const { isLoggedIn } = await response.json();
+                    return isLoggedIn;
+                } catch (error) {
+                    console.error('Error:', error);
+                    return false;
+                }
+            }
+
+            // Function to fetch and render comments
+            async function fetchComments() {
+                const url = window.location.pathname;
+                const cardId = url.split('/')[2];
+                try {
+                    const response = await fetch(`/comments/${cardId}`);
+                    if (!response.ok) throw new Error('Failed to fetch comments');
+                    const comments = await response.json();
+                    console.log("comments : ",comments)
+                    renderComments(comments);
+                } catch (error) {
+                    console.error('Error:', error);
+                }
+            }
+
+            // Function to submit a new comment
+            async function submitComment() {
+                const isLoggedIn = await checkLoginStatus();
+                console.log("isLoggedIn : ", isLoggedIn)
+                if (!isLoggedIn) {
+                    alert('You must be logged in to post comments');
+                    return;  // Exit the function if not logged in
+                }
+                const url = window.location.pathname;
+                const cardId = url.split('/')[2];
+                console.log("This is cardId : ", cardId)
+                const commentText = document.getElementById('commentInput').value;
+                console.log("commentText : ", commentText)
+
+                const comment = { comment: commentText };
+                console.log("comment : ", comment)
+                try {
+                    const response = await fetch(`/comments/${cardId}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(comment)
+                    });
+                    console.log("response : ", response)
+                    if (!response.ok) throw new Error('Failed to post comment');
+                    fetchComments();  // Refresh c  omments after posting
+                    document.getElementById('commentInput').value = '';  // Clear input field
+                } catch (error) {
+                    console.error('Error:', error);
+                }
+            }
+
+            // Function to render comments
+            function renderComments(comments) {
+                const container = document.getElementById('commentsContainer');
+                container.innerHTML = '';  // Clear existing comments
+                comments.forEach(comment => {
+                    const div = document.createElement('div');
+                    for(let i=0;i<comments.length;i++){
+                        div.textContent = comments[i].Comment;
+                        console.log("Comment by frontend : ",comments[11].Comment)
+                    }
+                    container.appendChild(div);
+                });
+            }
+
+        </script>

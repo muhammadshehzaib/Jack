@@ -21,6 +21,11 @@
   renderCards(0, limit);  // Re-render cards from the beginning
   currentOffset = 0;  // Reset offset after sorting
 };
+window.sortCardsByNameDesc = () => {
+  cardData.sort((a, b) => b.name.localeCompare(a.name));
+  renderCards(0, limit);
+  currentOffset = 0; // Reset offset after sorting
+};
   // Function to fetch cards from the API
   const fetchCards = async () => {
     try {
