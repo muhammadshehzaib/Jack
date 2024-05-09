@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Log In</title>
+    <link rel="stylesheet" href="/public/css/login.css">
+
+</head>
+<body>
+    <%- include('partials/navbar.ejs') %>
+    <div class="login-container">
+        <div class="form-container">
+            <h1 class="heading">Login</h1>
+            <form id="login-form">
+                <input type="email" name="email" placeholder="Email" autocomplete="off" required>
+                <input type="password" name="password" placeholder="Password" autocomplete="off" required>
+                <button type="submit" class="submit-button">Login</button>
+            </form>
+            <a href="#" class="link">Don't have an account? Register one here.</a>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('login-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const formData = new FormData(this);
+            const data = {};
+            formData.forEach((value, key) => { data[key] = value; });
+
+            fetch('/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.memberId) {
+                    localStorage.setItem('memberId', data.memberId);
+                    localStorage.setItem('loginTrue', 'true');
+                    alert(data.message); // Login successful
+                    window.location.href = '/dashboard'; // Redirect to dashboard or another page
+                } else {
+                    alert(data.message); // Display error message from server
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred during login. Please try again.');
+            });
+        });
+    </script>
+</body>
+
+
+</html>

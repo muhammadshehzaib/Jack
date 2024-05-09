@@ -1,0 +1,94 @@
+body {
+    background-image: url('/public/Images/pokemonSignUpBackground.jpg');
+    background-size: cover;
+    background-position: center;
+}
+
+.form-container {
+    width: 90%; /* Starts off as 90% of the viewport width on smaller screens */
+    max-width: 400px; /* Maximum width to not exceed 400px */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.8);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Optional: adds a subtle shadow for better visibility */
+    border-radius: 8px; /* Optional: rounds the corners */
+}
+
+
+*:focus {
+    outline: none;
+}
+
+.login-container{
+    display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+
+.form {
+    width: 400px;
+    color: #000000;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.heading {
+    text-transform: capitalize;
+    text-align: center;
+    font-size: 80px;
+    font-weight: 300;
+    margin-bottom: 50px;
+}
+
+input,
+.submit-button {
+    width: 80%;
+    height: 35px;
+    display: block;
+    margin: 20px auto;
+    border-radius: 5px;
+    background: rgba(255, 255, 255, 0.7);
+    border: none;
+    color: black;
+    padding: 15px;
+    transition: background-color 0.5s, color 0.5s;
+    text-transform: capitalize;
+}
+
+input::placeholder {
+    color: #cc0000;
+}
+
+
+input:focus,
+.submit-button:hover {
+    background-color:#ffcb05;
+    color: black;
+}
+
+input:focus::placeholder {
+    color: black;
+}
+
+.submit-button {
+    width: auto;
+    padding: 0 20px;
+    cursor: pointer;
+    margin: 50px auto 0;
+}
+
+.link {
+    text-align: center;
+    text-transform: capitalize;
+    text-decoration: none;
+    color: rgba(255, 255, 255, 0.3);
+    display: block;
+    margin: 30px auto;
+}
+
+.link:hover {
+    color:  #cc0000;
+}

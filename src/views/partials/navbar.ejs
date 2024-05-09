@@ -1,0 +1,79 @@
+<link rel="stylesheet" type="text/css" href="public/css/partials/navbar.css">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
+<nav>
+  <ul class="sidemenu">
+
+    <li onclick=closeSideMenu()><a href="#"> <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/></svg></a> </li>
+    <li><a href="/"> Home</a> </li>
+    <li><a href="/browse-cards"> Browse Cards</a> </li>
+    <li><a href="/expansions"> Expansions</a> </li>
+    <li><a href="/dashboard"> Dashboard</a> </li>
+    <li><a href="/profile"> Profile</a> </li>
+    <li><a id="signupLink" href="/signup"> Sign Up</a> </li>
+    <li><a id="loginLink" href="/login"> Log In</a> </li>
+    <li id="logoutLink" style="display:none !important;"><a href="#" onclick="logout()">Log Out</a></li>
+
+  </ul>
+  <ul>
+
+      <li><a href="/"> PokeTrader</a> </li>
+    <li class="hideDisplayOnMobile"><a href="/"> Home</a> </li>
+    <li class="hideDisplayOnMobile"><a href="/browse-cards"> Browse Cards</a> </li>
+    <li class="hideDisplayOnMobile"><a href="/expansions"> Expansions</a> </li>
+    <li><a href="/dashboard"> Dashboard</a> </li>
+    <li class="hideDisplayOnMobile"><a href="/profile"> Profile</a> </li>
+    <li class="hideDisplayOnMobile"><a href="/signup"> Sign Up</a> </li>
+    <li class="hideDisplayOnMobile"><a href="/login"> Log In</a> </li>
+    <li class="hamburger-menu" onclick=displaySideMenu()><a href="#"><svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M120-240v-80h720v80H120Zm0-200v-80h720v80H120Zm0-200v-80h720v80H120Z"/></svg></a></li>
+  </ul>
+</nav>
+
+<Script>
+  function displaySideMenu(){
+    const sidemenu = document.querySelector('.sidemenu')
+    sidemenu.style.display ='flex';
+  }
+  function closeSideMenu(){
+    const sidemenu = document.querySelector('.sidemenu')
+    sidemenu.style.display ='none';
+  }
+  document.addEventListener("DOMContentLoaded", function() {
+    function updateNavigation() {
+        const loggedIn = localStorage.getItem('loginTrue') == 'true';
+        console.log('Logged In:', loggedIn); // Check if this prints true/false as expected
+
+        const signupLink = document.getElementById('signupLink');
+        const loginLink = document.getElementById('loginLink');
+        const logoutLink = document.getElementById('logoutLink');
+
+        console.log('Signup Link:', signupLink); // Check if elements are captured correctly
+        console.log('Login Link:', loginLink);
+        console.log('Logout Link:', logoutLink);
+
+        if (loggedIn) {
+            signupLink.style.setProperty('display', 'none', 'important');
+            loginLink.style.setProperty('display', 'none', 'important');
+            logoutLink.style.setProperty('display', 'block', 'important');
+        } else {
+            signupLink.style.setProperty('display', 'block', 'important');
+            loginLink.style.setProperty('display', 'block', 'important');
+            logoutLink.style.setProperty('display', 'none', 'important');
+        }
+    }
+
+    updateNavigation(); // Ensure this function is called to set initial state
+
+    window.logout = function() {
+        localStorage.removeItem('memberId');
+        localStorage.removeItem('loginTrue');
+        alert('You have been logged out.');
+        window.location.href = '/';
+    };
+});
+
+
+  </Script>
+
+

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Browse Cards</title>
+    <!-- Add your CSS and JavaScript links here -->
+    <link href="/public/css/browsecards.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../public/css/card.css">
+<link rel="stylesheet" href="../../public/css/partials/navbar.css">
+
+</head>
+<body>
+    <%- include('partials/navbar.ejs') %>
+    <div class="container">
+        <div class="input-group mb-3">
+          <input type="search" id="searchInput" class="form-control" placeholder="Pokemon Name" aria-label="Pokemon's Name">
+          <button class="btn btn-outline-secondary" type="button" id="searchButton">Search</button>
+          
+        </div>
+
+        <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+              Filters
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+              <li><a class="dropdown-item" href="#">Action</a></li>
+              <li><a class="dropdown-item" href="#">Another action</a></li>
+              <li><a class="dropdown-item" href="#">Something else here</a></li>
+            </ul>
+          </div>
+          
+        </div>
+        <div id="cardsContainer"></div>
+
+    <%- include('partials/gallery.ejs') %>
+  <%- include('partials/footer.ejs') %>
+  
+  <script>
+    // Define the searchCards function
+    function searchCards() {
+        const searchTerm = document.getElementById('searchInput').value;
+        const apiUrl = `https://api.tcgdex.net/v2/en/hp/${encodeURIComponent(searchTerm)}`;
+
+        fetch(apiUrl)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                const cards = data.cards;  // Access the 'cards' array from the response
+                const container = document.getElementById('cardsContainer');
+                container.innerHTML = ''; // Clear previous results
+
+                // Check if cards is an array and has content
+                if (Array.isArray(cards) && cards.length > 0) {
+                    cards.forEach(card => {
+                        const cardElement = document.createElement('div');
+                        cardElement.className = 'card';
+                        cardElement.innerHTML = `
+                        <a href="/card/${card.id}">
+                                <div class="col-3">
+                                    <div class="card" style="width: 18rem;">
+                                        <img src="/public/Images/wallpaper-50.jpg" class="card-img-top" alt="${card.name}">
+                                        <p class="muted text-muted px-2">${card.name}</p>
+                                        <div class="card-body d-flex justify-content-center align-items-center flex-column">
+                                            <h5 class="card-title"></h5>
+                                            <div class="container-badge">
+                                                <span class="badge bg-success">Success</span>
+                                                <span class="badge bg-danger">Danger</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="heart-icon">
+                                        <img src="../../../public/Images/heart.png">
+                                    </div>
+                                </div>
+                            </a>`;
+                        container.appendChild(cardElement);
+                    });
+                } else {
+                    container.innerHTML = '<p>No results found.</p>';
+                }
+            })
+            .catch(error => {
+                console.error('Failed to fetch:', error);
+                document.getElementById('cardsContainer').innerHTML = '<p>Error loading the data.</p>';
+            });
+    }
+
+    document.getElementById('searchButton').addEventListener('click', searchCards);
+</script>
+
+
+</body>
+</html>

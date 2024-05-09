@@ -1,0 +1,61 @@
+body, html {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.container {
+  padding: 0 15px; /* Ensures padding is consistent */
+}
+
+.mt-7 {
+  margin-top: 7em; /* Spacing from the top */
+}
+
+/* Card specific styles, ensuring they remain centered and well-spaced */
+.card {
+  margin-bottom: 20px; /* Space between cards when stacked */
+}
+
+.card-body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+/* Responsive Media Queries */
+
+/* For medium devices (tablets, 768px and up) */
+@media (min-width: 768px) {
+  .hero-section, .main-container {
+    display: flex;
+    flex-direction: row; /* Ensures side-by-side layout on medium and larger screens */
+    justify-content: space-between; /* Distributes spacing between elements */
+    align-items: center; /* Vertically centers elements in the container */
+  }
+
+  .col-md-4 {
+    width: 33.33%; /* Ensures that the columns take up one-third of the container */
+  }
+
+  .column-space {
+    padding-top: 0; /* Removes top padding on larger screens if not needed */
+  }
+}
+
+/* For small devices (less than 768px) */
+@media (max-width: 767px) {
+  .hero-section {
+    flex-direction: column; /* Stacks the elements vertically */
+  }
+
+  .col-12 {
+    width: 100%; /* Each column takes the full width of the screen */
+  }
+
+  .column-space {
+    padding-top: 2em; /* Adds spacing above the column on smaller screens */
+  }
+}

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up</title>
+    <link rel="stylesheet" href="/public/css/signup.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"> <!-- Ensure Bootstrap is included -->
+</head>
+
+<body>
+    
+<%- include('partials/navbar.ejs') %>
+    <div class="reg-container">
+     <div class="form-container">
+        <h1 class="heading">
+            Register
+        </h1>
+        <form id="signup-form">
+            <input type="text" name="name" placeholder="Name" autocomplete="off" required>
+            <input type="email" name="email" placeholder="Email" autocomplete="off" required>
+            <input type="password" name="password" placeholder="Password" autocomplete="off" required>
+            <button type="submit" class="submit-button">Register</button>
+        </form>
+        <a href="#" class="link">Already have an account? Sign in here.</a>
+     </div>
+    </div>
+
+    <script>
+        document.getElementById('signup-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const formData = new FormData(this);
+            const data = {};
+            formData.forEach((value, key) => { data[key] = value; });
+    
+            fetch('/signup', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);  // Log data to check the structure
+                if (data.memberId) {  // Check if memberId is returned
+                    alert(data.message); // Notify the user of a successful signup
+                    setTimeout(function() { // Delay redirection for 2 seconds
+                        window.location.href = '/login'; // Adjust the URL as needed
+                    }, 1200);
+                } else {
+                    alert('Signup failed. Please check the information you have entered.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred. Please ensure to use different unique email');
+            });
+        });
+    </script>
+    
+    
+</body>
+</html>

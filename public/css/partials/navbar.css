@@ -1,0 +1,88 @@
+* {
+  margin-top: 0;
+  padding: 0;
+  box-sizing: border-box; /* Ensures padding and border are included in width/height */
+}
+
+body {
+  min-height: 100vh;
+  background-color: #f4f4f4; /* Light grey as fallback */
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+nav {
+  background-color: #ffcb05; /* Pokéball yellow */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+ 
+}
+
+nav ul {
+  width: 100%;
+  list-style: none;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  
+}
+
+nav li {
+  height: 50px;
+}
+
+nav a {
+ 
+  height: 100%;
+  padding: 0 30px;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  color: #2a75bb; /* Pokéball blue */
+  transition: background-color 0.3s ease; /* Smooth transition for hover effect */
+}
+
+nav a:hover {
+  background-color: #e25a5a; /* Pokéball red */
+}
+
+nav li:first-child {
+  margin-right: auto;
+}
+
+.sidemenu {
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 100vh;
+  width: 250px;
+  z-index: 999;
+  background-color: #ffffff;
+  backdrop-filter: blur(10px);
+  box-shadow: -10px 0 10px rgba(0, 0, 0, 0.1);
+  display: none;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+
+.sidemenu li {
+  width: 100%;
+}
+
+.sidemenu a {
+  width: 100%;
+}
+
+@media (max-width: 800px) {
+  .hideDisplayOnMobile {
+    display: none;
+  }
+}
+
+@media screen and (min-width: 737px) {
+  .hamburger-menu {
+    display: none;
+  }
+}

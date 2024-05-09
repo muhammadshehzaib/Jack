@@ -1,0 +1,75 @@
+body{
+    overflow-x: hidden;
+}
+
+
+.card {
+
+    background-color: beige;
+    padding: 40px;
+}
+
+ .image{
+    width: 40%;
+ }
+
+.card-info{
+    width: 80vw;
+    margin: auto;
+    display: flex;
+    column-gap: 30px;
+}
+
+.heart-icon{
+    
+    cursor: pointer;
+}
+
+#cardImage {
+    width: 330px;
+}
+
+.cardTitle {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.cardDescription {
+    font-size: 14px;
+    color: #666;
+}
+
+#all-about-card{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    padding: 10px 5px;
+    row-gap: 20px;
+    
+}
+
+#attack{
+    border-top: 1px solid gray;
+    border-bottom: 1px solid gray;
+    padding: 20px 0px;
+}
+.card-detail{
+    width: 70%;
+}
+.bold{
+    font-weight: 900;
+    font-size: 25px;
+}
+
+@media screen and (max-width: 600px) {
+    .card-info{
+        flex-direction: column;
+        align-items: center;
+    }
+   .image{
+    width: 100%;
+   }
+    .card-detail{
+        width: 100%;
+    }
+}

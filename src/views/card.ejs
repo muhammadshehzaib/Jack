@@ -1,0 +1,180 @@
+<link rel="stylesheet" href="../../public/css/card.css">
+<link rel="stylesheet" href="../../public/css/partials/navbar.css">
+
+
+<%- include('partials/navbar.ejs') %>
+<div class="card">
+    <div class="card-info">
+    <div class="image">
+        <div style="border: 1px solid gray;">
+        <img
+        style="width: 100%;height:500px;object-fit: cover;"
+          src="/public/Images/wallpaper-50.jpg"
+          class="card-img-top"
+          alt="..."
+        />
+    </div>
+        <div class="heart-icon" >
+            <img src="../../../public/Images/heart.png" ><img/>
+        </div>
+        <h2 id="name"></h2>
+        <div
+          class=""
+        >
+          <p style="max-width: 100%;" class="card-title-here" id="title"></p>
+    </div>
+    </div>  
+    <div class="card-detail" >
+        <div style="display: flex;justify-content:space-between;">
+        <h2 style="color: black;" id="cardTitle"></h2>
+       
+        <div style="display: flex;align-items: center;column-gap: 5px;">
+            <span>HP </span><h2 id="hp"></h2>
+        </div>
+    </div>
+        <div style="display: flex;justify-content: space-between;">
+            <h5 id="category"></h5>
+            <h5 style="margin: 0;" id="stage"></h5>
+        </div>
+        
+        
+      <div id="attack">
+
+      </div>
+     
+        
+      <div id="all-about-card">
+        <div class="container" style="display: flex;flex-direction: column;">
+            <h5>Weaknesses</h5>
+            <div class="bold" id="weak"></div>
+        </div>
+    
+        <div class="container" style="display: flex;flex-direction: column;">
+            <h5>Resistance</h5>
+            <div class="bold" id="resistance"></div>
+        </div>
+        
+        <div class="container" style="display: flex;flex-direction: column;">
+            <h5>Retreat Cost</h5>
+            <div class="bold" id="retreatCost"></div>
+        </div>
+
+        <div class="container" style="display: flex;flex-direction: column;">
+            <h5>Expansion Cost</h5>
+            <div class="bold" id="expansion"></div>
+        </div>
+      
+      
+        <div class="container" style="display: flex;flex-direction: column;">
+            <h5>Card Number</h5>
+            <div class="bold" id="cardNo"></div>
+        </div>
+
+        <div class="container" style="display: flex;flex-direction: column;">
+            <h5>Rarity</h5>
+            <div class="bold" id="rarity"></div>
+        </div>
+        
+        <div class="container" style="display: flex;flex-direction: column;">
+            <h5>Illustrator</h5>
+            <div class="bold" id="illustrator"></div>
+        </div>
+       
+        
+        <div class="container" style="display: flex;flex-direction: column;">
+            <h5>Card Format</h5>
+            <div class="bold" id="cardFormat"></div>
+        </div>
+
+        <div class="container" style="display: flex;flex-direction: column;">
+            <h5>Regulation Mark</h5>
+            <div class="bold" id="regulationMark"></div>
+        </div>
+      
+      </div>
+        
+
+    </div>
+</div>
+</div>
+</div>
+<%- include('partials/footer.ejs') %>
+
+<script>
+    // Function to fetch card data
+    const fetchCardData = async () => {
+        try {
+            // Extract the ID from the URL
+            const url = window.location.pathname;
+            const id = url.split('/')[2];
+
+            // Make a fetch request using the extracted ID
+            const response = await fetch(`https://api.tcgdex.net/v2/en/cards/${id}`);
+  
+            // Check if the response is ok
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+
+            // Parse response JSON
+            const card = await response.json();
+            
+
+            console.log(card);
+            console.log('card')
+
+            // Update the card details in the HTML
+            document.getElementById('cardTitle').innerText = card.name; // Assuming name is the title
+
+            document.getElementById('name').innerHTML = card.name; 
+            document.getElementById('title').innerHTML = card.description; 
+            
+            document.getElementById('hp').innerHTML = card.hp; 
+            document.getElementById('stage').innerHTML = card.stage; 
+            document.getElementById('category').innerHTML = card.category; 
+            const attacks = card.attacks;
+
+            const attackHtml = `
+                <div style="display: flex;flex-direction:column;justify-content: space-between;">
+                <h3>${attacks[0].name}</h3>
+                <h5>${attacks[0].effect || ''}</h5>
+                </div>
+                `;
+
+                document.getElementById('attack').insertAdjacentHTML('beforeend', attackHtml);
+                
+               if(attacks.length>1){
+                const attack2Html = `
+                <div style="display: flex;flex-direction:row;justify-content: space-between;">
+                <h3>${attacks[1].name}</h3>
+                <h5 style="fontWeight:bold">${attacks[1].damage}</h5>
+                </div>
+                <h5>${attacks[1].effect || ''}</h5>
+                `;
+
+                document.getElementById('attack').insertAdjacentHTML('beforeend', attack2Html);
+
+               }
+                
+        
+            document.getElementById('weak').innerText = card.weaknesses.length+'x';
+    
+            document.getElementById('resistance').innerText=card.resistance || '__'
+            document.getElementById('retreatCost').innerHTML=card.retreatCost || '__';
+            document.getElementById('expansion').innerHTML=card.expansion || '__';
+            document.getElementById('cardNo').innerHTML=card.cardNo || '__';
+            document.getElementById('rarity').innerHTML=card.rarity || '__';
+            document.getElementById('illustrator').innerHTML=card.illustrator || '__';
+            document.getElementById('cardFormat').innerHTML=card.cardFormat || '__';
+            document.getElementById('regulationMark').innerHTML=card.regulationMark || '__';
+        } catch (error) {
+            console.error(error);
+            // Handle the error, e.g., display an error message to the user
+        }
+    };
+
+    // Call the fetchCardData function
+    fetchCardData();
+</script>
+
+
