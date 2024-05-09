@@ -5,30 +5,42 @@
   <!-- This is where the cards will be dynamically added -->
 </div>
 
+<div class="container mt-4">
+  <button id="load-more-btn" type="button" class="btn btn-primary show-more__btn">Load More</button>
+</div>
+
+
+
 <script>
   let cardData = [];
+  let currentOffset = 0;
+  const limit = 20;
+
 
   // Function to fetch cards from the API
   const fetchCards = async () => {
     try {
       const response = await fetch('https://api.tcgdex.net/v2/en/sets/swsh1');
       const data = await response.json();
-      cardData = data.cards;
-      console.log(cardData)
-      // Call function to render cards after fetching data
-      renderCards();
+      cardData = data.cards.flat();
+      // // Call function to render cards after fetching data
+      renderCards(currentOffset, limit);
+
     } catch (err) {
       console.log(err);
     }
   };
 
+  
   // Function to render cards
-  const renderCards = () => {
+  const renderCards = (offset, limit) => {
     const galleryContainer = document.getElementById('gallery');
     // Clear previous content in case of re-rendering
-    galleryContainer.innerHTML = '';
+    // galleryContainer.innerHTML = '';
+    const slicedCards = cardData.slice(offset, offset + limit);
+    console.log("slicedCards : ",slicedCards)
     // Iterate over cardData and create HTML for each card
-    cardData.forEach(item => {
+    slicedCards.forEach(item => {
       const cardHtml = `
       <a href="/card/${item.id}">
       <div class="col-3">
@@ -58,11 +70,16 @@
       galleryContainer.insertAdjacentHTML('beforeend', cardHtml);
     });
   };
-
+  document.getElementById('load-more-btn').addEventListener('click', () => {
+    currentOffset += limit;
+    renderCards(currentOffset, limit);
+    // Hide the "Load More" button if there are no more cards to show
+    if (currentOffset >= cardData.length) {
+      document.getElementById('load-more-btn').style.display = 'none';
+    }
+  }); 
   // Call fetchCards function to initiate fetching
   fetchCards();
 </script>
 
-<div class="container">
-  <button type="button" class="btn btn-primary show-more__btn">Load More</button>
-</div>
+
