@@ -90,7 +90,7 @@ CREATE TABLE `collections` (
 
 CREATE TABLE `comments` (
   `CommentID` int(11) NOT NULL,
-  `CollectionID` int(11) DEFAULT NULL,
+  `CollectionID` varchar(20) DEFAULT NULL,
   `MemberID` int(11) DEFAULT NULL,
   `Comment` text DEFAULT NULL,
   `CommentDate` datetime DEFAULT current_timestamp()
@@ -246,7 +246,6 @@ ALTER TABLE `collections`
 --
 ALTER TABLE `comments`
   ADD PRIMARY KEY (`CommentID`),
-  ADD KEY `CollectionID` (`CollectionID`),
   ADD KEY `MemberID` (`MemberID`);
 
 --
@@ -421,7 +420,6 @@ ALTER TABLE `collections`
 -- Constraints for table `comments`
 --
 ALTER TABLE `comments`
-  ADD CONSTRAINT `comments_ibfk_1` FOREIGN KEY (`CollectionID`) REFERENCES `collections` (`CollectionID`),
   ADD CONSTRAINT `comments_ibfk_2` FOREIGN KEY (`MemberID`) REFERENCES `members` (`MemberID`);
 
 --

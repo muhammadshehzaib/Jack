@@ -38,10 +38,10 @@ class Member {
         );
         return result;
       }
-      static async createComment(memberId, comment) {
+      static async createComment(memberId, comment,cardId) {
         try {
-            const query = `INSERT INTO comments (MemberID, Comment) VALUES (?, ?)`;
-            const [result] = await db.execute(query, [memberId, comment]);
+            const query = `INSERT INTO comments (MemberID, Comment,CollectionID) VALUES (?, ?, ?)`;
+            const [result] = await db.execute(query, [memberId, comment,cardId]);
             return result.insertId;
         } catch (err) {
             throw err;
@@ -49,7 +49,7 @@ class Member {
     }
     static async getCommentsByCardId(cardId) {
         try {
-            const query = `SELECT * FROM comments`;
+            const query = `SELECT * FROM comments WHERE CollectionID = ? ORDER BY CommentDate DESC`;
             const [results] = await db.execute(query, [cardId]);
             return results;
         } catch (err) {

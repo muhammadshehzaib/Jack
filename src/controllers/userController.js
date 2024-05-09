@@ -43,7 +43,7 @@ exports.getCommentsByCardId = async(req,res)=>{
     const { cardId } = req.params;
     const comments = await Member.getCommentsByCardId(cardId);
 
-    if (!comments.length) {
+      if (comments.length===0) {
       return res.status(404).json({ message: 'No comments found for this card' });
   } 
   res.json(comments);
@@ -56,7 +56,8 @@ exports.getCommentsByCardId = async(req,res)=>{
 exports.postComment = async(req,res)=>{
   try{
   const { comment } = req.body;
-  const { memberId, isLoggedIn } = req.session;
+  const {cardId} = req.params;
+   const { memberId, isLoggedIn } = req.session;
 
   // Check if user is logged in
   if (!memberId) {
@@ -68,7 +69,7 @@ exports.postComment = async(req,res)=>{
       return res.status(400).send('Comment text cannot be empty');
   }
 
-  const commentId = await Member.createComment(memberId,comment);
+  const commentId = await Member.createComment(memberId,comment,cardId);
   res.json({ message: 'Comment successful', commentId: commentId });
 
 } catch (error) {

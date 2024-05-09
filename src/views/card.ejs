@@ -122,11 +122,12 @@
 
                     // Parse response JSON
                     const card = await response.json();
+                    
+                    
                     fetchComments();  // Ensure this is the last line in your try block
 
 
                     console.log(card);
-                    console.log('card')
 
                     // Update the card details in the HTML
                     document.getElementById('cardTitle').innerText = card.name; // Assuming name is the title
@@ -199,9 +200,11 @@
                 const cardId = url.split('/')[2];
                 try {
                     const response = await fetch(`/comments/${cardId}`);
-                    if (!response.ok) throw new Error('Failed to fetch comments');
                     const comments = await response.json();
-                    console.log("comments : ",comments)
+                    console.log("comments sdnksdnj: ",comments)
+                    if(comments.length===""){
+                        return;
+                    }
                     renderComments(comments);
                 } catch (error) {
                     console.error('Error:', error);
@@ -234,7 +237,7 @@
                     });
                     console.log("response : ", response)
                     if (!response.ok) throw new Error('Failed to post comment');
-                    fetchComments();  // Refresh c  omments after posting
+                    fetchComments();  // Refresh c omments after posting
                     document.getElementById('commentInput').value = '';  // Clear input field
                 } catch (error) {
                     console.error('Error:', error);
@@ -245,11 +248,23 @@
             function renderComments(comments) {
                 const container = document.getElementById('commentsContainer');
                 container.innerHTML = '';  // Clear existing comments
-                comments.forEach(comment => {
+
+
+                if (comments.length === 0) {
+                const noCommentsDiv = document.createElement('div');
+                noCommentsDiv.textContent = 'No comments yet. Be the first to comment!';
+                container.appendChild(noCommentsDiv);
+                return;
+            }
+                    console.log("comments.length : ",comments.length)
+
+
+                comments?.forEach(comment => {
+
                     const div = document.createElement('div');
                     for(let i=0;i<comments.length;i++){
-                        div.textContent = comments[i].Comment;
-                        console.log("Comment by frontend : ",comments[11].Comment)
+                        div.textContent = comments[i]?.Comment;
+                        console.log("Comment by frontend : ",comments[i].Comment)
                     }
                     container.appendChild(div);
                 });
