@@ -9,26 +9,3 @@
 .show-more__btn{
     margin: 0 auto;
 }
-.container-badge {
-    display: flex;
-    justify-content: space-between;
-    width: 50%;
-    flex-direction: row;
-}
-
-.heart-icon{
-    display: flex;
-    justify-content: flex-end;
-    width: 18rem;
-}
-.card{
-    cursor: pointer;
-}
-
-@media (max-width: 600px) {
-    .container-badge {
-        flex-direction: column;
-   
-        justify-content: flex-start;
-    }
-}

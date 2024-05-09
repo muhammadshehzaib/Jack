@@ -1,6 +1,6 @@
 const session = require('express-session');
 const MySQLStore = require('express-mysql-session')(session);
-const pool = require('./db');
+const pool = require('./db'); // Ensure you have a pool export from your database module
 require('dotenv').config(); // Load environment variables
 
 // Options for MySQL store

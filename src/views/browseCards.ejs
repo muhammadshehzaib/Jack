@@ -31,7 +31,9 @@
           </div>
           
         </div>
-        <div id="cardsContainer"></div>
+          <div id="cardsContainer">
+            <!-- Cards will be dynamically inserted here -->
+        </div>
 
     <%- include('partials/gallery.ejs') %>
   <%- include('partials/footer.ejs') %>
@@ -50,13 +52,15 @@
                 return response.json();
             })
             .then(data => {
-                const cards = data.cards;  // Access the 'cards' array from the response
+                const cards = data.cards.flat();  // Access the 'cards' array from the response
                 const container = document.getElementById('cardsContainer');
                 container.innerHTML = ''; // Clear previous results
 
                 // Check if cards is an array and has content
                 if (Array.isArray(cards) && cards.length > 0) {
-                    cards.forEach(card => {
+                  const slicedCards = cards.slice(0, 20); // Limit the results to 20 cards
+
+                  slicedCards.forEach(card => {
                         const cardElement = document.createElement('div');
                         cardElement.className = 'card';
                         cardElement.innerHTML = `
@@ -92,9 +96,9 @@
 
     document.getElementById('searchButton').addEventListener('click', searchCards);
 
+
+
     
-
-
 </script>
 
 
