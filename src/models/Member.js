@@ -1,4 +1,4 @@
-const db = require('../config/db'); 
+const db = require('../config/db');
 const bcrypt = require('bcryptjs');
 
 class Member {
@@ -29,19 +29,32 @@ class Member {
     static async findById(memberId) {
         const [rows] = await db.execute('SELECT MemberID, Email, Name, PasswordHash FROM members WHERE MemberID = ?', [memberId]);
         return rows[0];
-      }
-    
-      static async updateById(memberId, email, name, passwordHash) {
+    }
+
+    static async updateById(memberId, email, name, passwordHash) {
         const [result] = await db.execute(
-          'UPDATE members SET Email = ?, Name = ?, PasswordHash = ? WHERE MemberID = ?',
-          [email, name, passwordHash, memberId]
+            'UPDATE members SET Email = ?, Name = ?, PasswordHash = ? WHERE MemberID = ?',
+            [email, name, passwordHash, memberId]
         );
         return result;
-      }
-      static async createComment(memberId, comment,cardId) {
+    }
+    static async createComment(memberId, comment, cardId) {
         try {
             const query = `INSERT INTO comments (MemberID, Comment,CollectionID) VALUES (?, ?, ?)`;
-            const [result] = await db.execute(query, [memberId, comment,cardId]);
+            const [result] = await db.execute(query, [memberId, comment, cardId]);
+            return result.insertId;
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    static async createCollection(memberId, name, description, creationDate) {
+        try {
+            const query = `
+                INSERT INTO collections (MemberID, Name, Description) 
+                VALUES (?, ?, ?);
+            `;
+            const [result] = await db.execute(query, [memberId, name, description]);
             return result.insertId;
         } catch (err) {
             throw err;
@@ -56,7 +69,7 @@ class Member {
             throw err;
         }
     }
-    
+
 }
 
 module.exports = Member;

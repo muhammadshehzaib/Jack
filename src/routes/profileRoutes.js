@@ -7,4 +7,12 @@ router.get('/profile', (req, res) => {
     }
     res.render('profile'); // Assuming the user is logged in
 });
+router.get('/collections', (req, res) => {
+    if (!req.session.isLoggedIn) {
+        return res.status(401).send('You need to log in');
+    }
+    res.render('collections')
+});
+
+
 module.exports = router;

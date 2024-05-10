@@ -31,6 +31,7 @@ exports.doLogin = async (req, res) => {
   const member = await Member.findByEmail(email.trim());
   if (member && await bcrypt.compare(password, member.PasswordHash)) {
       req.session.memberId = member.MemberID;  // Store member ID in session
+      console.log("req.session.memberId : ",req.session.memberId)
       req.session.isLoggedIn = true;  // Flag as logged-in
       console.log("Session Data:", req.session);  // Debugging output
       res.json({ message: 'Login successful', memberId: member.MemberID });
@@ -53,6 +54,31 @@ exports.getCommentsByCardId = async(req,res)=>{
 }
 }
 
+exports.createCollection = async(req,res)=>{
+  try{
+  const { name,description } = req.body;
+   const { memberId, isLoggedIn } = req.session;
+   console.log("This is memberId in the create Collection",memberId) 
+
+  // Check if user is logged in
+  if (!isLoggedIn || !memberId) {
+    return res.status(403).send('You must be logged in to create collections');
+}
+  // Validate the comment text
+  if (!name || name.trim().length === 0) {
+    return res.status(400).send('Collection name cannot be empty');
+}
+if (description && description.length < 20) {  // Optional: Validate description length if there is one
+    return res.status(400).send('Description too short');
+}
+const collectionId = await Member.createCollection(memberId, name, description);
+res.json({ message: 'Collection created successfully', collectionId: collectionId });
+
+} catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Failed to create collection', error: error.message });
+  }
+};
 exports.postComment = async(req,res)=>{
   try{
   const { comment } = req.body;
@@ -79,6 +105,14 @@ exports.postComment = async(req,res)=>{
   }
 
 };
+
+
+
+
+
+
+
+
 exports.getSessionStatus = (req, res) => {
   res.json({
       isLoggedIn: req.session.isLoggedIn || false

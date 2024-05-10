@@ -71,13 +71,54 @@ body{
     }
 }
 .comment-section {
+    width: 100%;
+    max-width: 500px;
+    margin: auto;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    font-family: Arial, sans-serif;
+}
+
+.comment-section h3 {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+}
+
+.comment-input {
+    width: 80%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px 0 0 5px;
+    outline: none;
+}
+
+.comment-input:focus {
+    border-color: #007bff;
+}
+
+.post-button {
+    padding: 10px 15px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    border-radius: 0 5px 5px 0;
+    cursor: pointer;
+}
+
+.post-button:hover {
+    background-color: #0056b3;
+}
+
+.comments-container {
     margin-top: 20px;
 }
-.comment-input {
-    width: 70%;
+
+.comment {
+    background-color: #e9e9e9;
     padding: 10px;
-    margin-right: 5px;
-}
-.comments-container {
-    margin-top: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }

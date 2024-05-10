@@ -33,6 +33,7 @@ window.sortCardsByNameDesc = () => {
       const data = await response.json();
 
       cardData = data.cards.flat();
+      
       console.log("cardData : ",cardData)
       // // Call function to render cards after fetching data
       renderCards(currentOffset, limit);
@@ -46,6 +47,7 @@ window.sortCardsByNameDesc = () => {
   // Function to render cards
   const renderCards = (offset, limit) => {
     const galleryContainer = document.getElementById('gallery');
+   
     galleryContainer.innerHTML = '';  // Clear previous content
 
     // Clear previous content in case of re-rendering
@@ -54,12 +56,14 @@ window.sortCardsByNameDesc = () => {
     console.log("slicedCards : ",slicedCards)
     // Iterate over cardData and create HTML for each card
     slicedCards.forEach(item => {
+      const imageSrc = `${item.image}/high.webp`;
+
       const cardHtml = `
       <a href="/card/${item.id}">
       <div class="col-3">
       <div class="card" style="width: 18rem">
         <img
-          src="/public/Images/wallpaper-50.jpg"
+        src="${imageSrc}" // Use imageSrc with "/high.webp" appended
           class="card-img-top"
           alt="..."
         />

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Collection</title>
+    <link rel="stylesheet" href="../../public/css/collection.css">
+
+    <!-- Add your CSS here -->
+</head>
+
+<body>
+    <div class="form-container">
+        <h1>Create Collections</h1>
+        <form id="collectionForm">
+            <label for="collectionName">Name:</label>
+            <input type="text" id="collectionName" placeholder="Enter collection name" required>
+            <label for="collectionDescription">Description:</label>
+            <input type="text" id="collectionDescription" placeholder="Enter description">
+            <button type="button" onclick="createCollection()">Create Collection</button>
+        </form>
+    </div>
+    <script>
+        async function checkLoginStatus() {
+            try {
+                const response = await fetch('/api/session-status');
+                if (!response.ok) throw new Error('Failed to fetch session status');
+                const { isLoggedIn } = await response.json();
+                return isLoggedIn;
+            } catch (error) {
+                console.error('Error:', error);
+                return false;
+            }
+        }
+
+        async function createCollection() {
+            const name = document.getElementById('collectionName').value;
+            const description = document.getElementById('collectionDescription').value;
+            // Prepare the data to send in the POST request
+            const memberId = sessionStorage.getItem('memberId');
+            console.log("This is the memberId : ",memberId)
+            const collectionData = {
+                name: name,
+                description: description,
+                memberId: memberId // Include memberId in the data
+
+            };
+            const isLoggedIn = await checkLoginStatus();
+            console.log("isLoggedIn : ",isLoggedIn)
+            if (!isLoggedIn) {
+                    alert('You must be logged in to post comments');
+                    return;  // Exit the function if not logged in
+                }
+
+            // Use fetch API to send a POST request to your backend
+            fetch('/api/collections', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    // Include additional headers as required, for example:
+                    // 'Authorization': 'Bearer yourTokenHere'
+                },
+                body: JSON.stringify(collectionData)
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Success:', data);
+                    alert('Collection created successfully!');
+                    // Clear the form or redirect the user
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                    alert('Failed to create collection. Please try again.');
+                });
+        }
+    </script>
+</body>
+
+</html>
