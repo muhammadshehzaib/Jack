@@ -17,15 +17,15 @@
   const limit = 20;
 
   window.sortCardsByName = () => {
-  cardData.sort((a, b) => a.name.localeCompare(b.name));
-  renderCards(0, limit);  // Re-render cards from the beginning
-  currentOffset = 0;  // Reset offset after sorting
-};
-window.sortCardsByNameDesc = () => {
-  cardData.sort((a, b) => b.name.localeCompare(a.name));
-  renderCards(0, limit);
-  currentOffset = 0; // Reset offset after sorting
-};
+    cardData.sort((a, b) => a.name.localeCompare(b.name));
+    renderCards(0, limit);  // Re-render cards from the beginning
+    currentOffset = 0;  // Reset offset after sorting
+  };
+  window.sortCardsByNameDesc = () => {
+    cardData.sort((a, b) => b.name.localeCompare(a.name));
+    renderCards(0, limit);
+    currentOffset = 0; // Reset offset after sorting
+  };
   // Function to fetch cards from the API
   const fetchCards = async () => {
     try {
@@ -33,32 +33,47 @@ window.sortCardsByNameDesc = () => {
       const data = await response.json();
 
       cardData = data.cards.flat();
-      
-      console.log("cardData : ",cardData)
+
+      console.log("cardData : ", cardData)
       // // Call function to render cards after fetching data
-      renderCards(currentOffset, limit);
+      const collections = await fetchCollections();  // Fetch collections before rendering
+
+      renderCards(currentOffset, limit, collections);  // Include collections in the renderCards call
 
     } catch (err) {
       console.log(err);
     }
   };
+  async function fetchCollections() {
+    try {
+      const response = await fetch('/api/collections');
+      const data = await response.json();
+      return data
+    } catch (error) {
+      console.error('Error fetching collections:', error);
+      return [];
+    }
+  }
 
-  
   // Function to render cards
-  const renderCards = (offset, limit) => {
+  const renderCards = async(offset, limit,collections) => {
     const galleryContainer = document.getElementById('gallery');
-   
+
     galleryContainer.innerHTML = '';  // Clear previous content
 
     // Clear previous content in case of re-rendering
-    // galleryContainer.innerHTML = '';
+    const collections1 = await fetchCollections();
+    console.log("collections : ",collections )
+    const collectionsOptions = collections1.map(col => `<option value="${col.CollectionID}">${col.Name}</option>`).join('');
+    
     const slicedCards = cardData.slice(offset, offset + limit);
-    console.log("slicedCards : ",slicedCards)
+    console.log("slicedCards : ", slicedCards)
     // Iterate over cardData and create HTML for each card
     slicedCards.forEach(item => {
       const imageSrc = `${item.image}/high.webp`;
 
       const cardHtml = `
+      <div>
       <a href="/card/${item.id}">
       <div class="col-3">
       <div class="card" style="width: 18rem">
@@ -68,6 +83,7 @@ window.sortCardsByNameDesc = () => {
           alt="..."
         />
         <p class="muted text-muted px-2">${item.name}</p>
+       
         <div
           class="card-body d-flex justify-content-center align-items-center flex-column"
         >
@@ -77,27 +93,94 @@ window.sortCardsByNameDesc = () => {
           <span class="badge bg-danger">Danger</span>
           </div>
         </div>
-    </div>
-           <div class="heart-icon" >
-            <img src="../../../public/Images/heart.png" ><img/>
-            </div>
+    </div>  
       </div>
-  </a>`;
+  </a>
+  <div class="button-container" style="width: 18rem">
+      <select class="form-control collection-select">
+            <option value="">Select Collection</option>
+            ${collectionsOptions}
+          </select>
+  <div class="cart" style="width: 18rem">
+    <button class="btn btn-primary mt-2 add-to-collection" data-card-id="${item.id}">Add to Collection</button>
+  </div>
+
+  <div class="heart-icon">
+    <img src="../../../public/Images/heart.png" alt="Heart Icon" />
+  </div>
+</div>
+  </div>`
+
+  ;
       // Append each card's HTML to the gallery container
       galleryContainer.insertAdjacentHTML('beforeend', cardHtml);
     });
   };
-  document.getElementById('load-more-btn').addEventListener('click', () => {
+  document.getElementById('gallery').addEventListener('click', async function(event) {
+    if (event.target.classList.contains('add-to-collection')) {
+      console.log("Add to collection button clicked");
+      const button = event.target;
+      const cardId = button.getAttribute('data-card-id');
+      console.log("Card ID: ", cardId);
+
+      // We need to ensure we're correctly navigating to the select element
+      // Assuming your HTML structure might have nested elements, you might need a different approach:
+      let collectionSelect = button;
+      while (!collectionSelect.classList.contains('button-container') && collectionSelect.parentElement) {
+        collectionSelect = collectionSelect.parentElement;
+      }
+      collectionSelect = collectionSelect.querySelector('.collection-select');
+
+      console.log("collectionSelect element: ", collectionSelect);
+      if (collectionSelect) {
+        const collectionId = collectionSelect.value;
+        console.log("Selected Collection ID: ", collectionId);
+
+        if (!collectionId) {
+          alert('Please select a collection');
+          return;
+        }
+        // Assuming addCardToCollection is defined elsewhere and works correctly
+        addCardToCollection(cardId, collectionId);
+      } else {
+        console.error('Failed to find the collection select element');
+      }
+    }
+});
+
+  
+    const addCardToCollection = async (cardId, collectionId) => {
+      const memberId = sessionStorage.getItem('memberId');
+      console.log("memberId : ",memberId)
+    try {
+      const response = await fetch('/add-card-to-collection', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ cardId, collectionId,memberId })
+      });
+      if (response.ok) {
+        alert('Card added to collection successfully!');
+      } else {
+        throw new Error('Failed to add card to collection');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      alert('Failed to add card to collection. Please try again.');
+    }
+  };
+
+
+  document.getElementById('load-more-btn').addEventListener('click', async() => {
     currentOffset += limit;
-    renderCards(currentOffset, limit);
+    const collections = await fetchCollections(); // Fetch collections for new batch of cards
+    renderCards(currentOffset, limit,collections); // Pass collections to renderCards function
+
     // Hide the "Load More" button if there are no more cards to show
     if (currentOffset >= cardData.length) {
       document.getElementById('load-more-btn').style.display = 'none';
     }
-  }); 
+  });
   // Call fetchCards function to initiate fetching
   fetchCards();
 
 </script>
-
-

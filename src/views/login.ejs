@@ -39,6 +39,9 @@
             .then(response => response.json())
             .then(data => {
                 if (data.memberId) {
+                    sessionStorage.setItem('memberId', data.memberId);
+                    sessionStorage.setItem('loginTrue', 'true');
+
                     localStorage.setItem('memberId', data.memberId);
                     localStorage.setItem('loginTrue', 'true');
                     alert(data.message); // Login successful

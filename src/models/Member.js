@@ -60,6 +60,55 @@ class Member {
             throw err;
         }
     }
+    static async addCardToCollection(collectionId, cardId, memberId) {
+        const query = `
+            INSERT INTO CollectionCards (CollectionID, CardID, MemberID)
+            VALUES (?, ?, ?);
+        `;
+        try {
+            await db.execute(query, [collectionId, cardId, memberId]);
+            return true;
+        } catch (err) {
+            console.error('Error adding card to collection:', err);
+            return false;
+        }
+    }
+    static async getCollectionsByMemberId(memberId) {
+        try {
+            const query = `
+                SELECT CollectionID, Name, Description, CreationDate 
+                FROM collections 
+                WHERE MemberID = ?;
+            `;
+            const [rows] = await db.execute(query, [memberId]);
+            return rows;
+        } catch (err) {
+            throw err;
+        }
+    }
+    // Member.js
+    static async getCardIDsByCollectionId(collectionId, memberId) {
+        try {
+            const query = `
+                SELECT cards
+                FROM collections
+                WHERE CollectionID = ? AND MemberID = ?;
+            `;
+            const [collectionResult] = await db.execute(query, [collectionId, memberId]);
+            if (collectionResult.length === 0 || !collectionResult[0].cards) {
+                return []; // Return empty if no cards or not found
+            }
+
+            const cardIDs = collectionResult[0].cards.split(',');
+            console.log("cardIDs from the models : ",cardIDs)
+            return cardIDs; // Directly return the array of card IDs
+        } catch (err) {
+            console.error('Error in getCardIDsByCollectionId:', err);
+            throw err;
+        }
+    }
+
+
     static async getCommentsByCardId(cardId) {
         try {
             const query = `SELECT * FROM comments WHERE CollectionID = ? ORDER BY CommentDate DESC`;
@@ -69,6 +118,7 @@ class Member {
             throw err;
         }
     }
+
 
 }
 

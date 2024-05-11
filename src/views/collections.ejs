@@ -11,6 +11,7 @@
 </head>
 
 <body>
+    <div>
     <div class="form-container">
         <h1>Create Collections</h1>
         <form id="collectionForm">
@@ -18,23 +19,24 @@
             <input type="text" id="collectionName" placeholder="Enter collection name" required>
             <label for="collectionDescription">Description:</label>
             <input type="text" id="collectionDescription" placeholder="Enter description">
+          
             <button type="button" onclick="createCollection()">Create Collection</button>
         </form>
     </div>
+        <div id="collectionsList">
+            <h1>Collections</h1>
+            <!-- Collections will be populated here by JavaScript -->
+        </div>
+        <div id="cardsContainer" style="display:none;">
+            <h2>Cards in Collection</h2>
+            <ul id="cardsList">
+                <!-- Cards will be listed here -->
+            </ul>
+        </div>
+</div>
     <script>
-        async function checkLoginStatus() {
-            try {
-                const response = await fetch('/api/session-status');
-                if (!response.ok) throw new Error('Failed to fetch session status');
-                const { isLoggedIn } = await response.json();
-                return isLoggedIn;
-            } catch (error) {
-                console.error('Error:', error);
-                return false;
-            }
-        }
 
-        async function createCollection() {
+         async function createCollection() {
             const name = document.getElementById('collectionName').value;
             const description = document.getElementById('collectionDescription').value;
             // Prepare the data to send in the POST request
@@ -43,8 +45,8 @@
             const collectionData = {
                 name: name,
                 description: description,
-                memberId: memberId // Include memberId in the data
-
+                memberId: memberId, // Include memberId in the data
+                // existingCollectionId: existingCollectionId || null
             };
             const isLoggedIn = await checkLoginStatus();
             console.log("isLoggedIn : ",isLoggedIn)
@@ -74,6 +76,77 @@
                     alert('Failed to create collection. Please try again.');
                 });
         }
+
+        async function checkLoginStatus() {
+            try {
+                const response = await fetch('/api/session-status');
+                if (!response.ok) throw new Error('Failed to fetch session status');
+                const { isLoggedIn } = await response.json();
+                return isLoggedIn;
+            } catch (error) {
+                console.error('Error:', error);
+                return false;
+            }
+        }     
+        document.addEventListener('DOMContentLoaded', function() {
+            const memberId = sessionStorage.getItem('memberId');
+
+    fetchCollections();
+
+    async function fetchCollections() {
+        
+        const memberId = sessionStorage.getItem('memberId');
+        console.log("memberId : ",memberId)
+        try {
+            const response = await fetch('/api/collections'); // Adjust this URL as necessary
+            const collections = await response.json();
+            console.log("collections : ",collections)
+            const collectionsList = document.getElementById('collectionsList');
+            collections.forEach(collection => {
+                const collectionDiv = document.createElement('div');
+                collectionDiv.textContent = collection.Name;
+                collectionDiv.onclick = () => fetchAndShowCards(collection.CollectionID);
+                collectionsList.appendChild(collectionDiv);
+            });
+        } catch (error) {
+            console.error('Error fetching collections:', error);
+        }
+    }
+
+    async function fetchAndShowCards(collectionId) {
+        const memberId = sessionStorage.getItem('memberId');
+
+        try {
+            console.log("collectionId : ",collectionId)
+            console.log("memberId : ",memberId)
+            const response = await fetch(`/collections/cards/${collectionId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({memberId }) // Adjust memberId as necessary
+            });
+            const shehzaib = await response.json()
+            console.log("This is response.json",shehzaib)
+            // // const { cards } = await response.json();
+            
+            // // console.log("cards in fetch and show cards: ",cards)
+            // // const cardsList = document.getElementById('cardsList');
+            // // cardsList.innerHTML = ''; // Clear previous cards
+            // // cards.forEach(cardId => {
+            // //     const cardItem = document.createElement('li');
+            // //     cardItem.textContent = `Card ID: ${cardId}`;
+            // //     cardsList.appendChild(cardItem);
+            // });
+            document.getElementById('cardsContainer').style.display = 'block';
+        } catch (error) {
+            console.error('Error fetching cards:', error);
+        }
+    }
+});
+
+
+        
     </script>
 </body>
 

@@ -56,7 +56,7 @@ exports.getCommentsByCardId = async(req,res)=>{
 
 exports.createCollection = async(req,res)=>{
   try{
-  const { name,description } = req.body;
+  const { name,description,existingCollectionId  } = req.body;
    const { memberId, isLoggedIn } = req.session;
    console.log("This is memberId in the create Collection",memberId) 
 
@@ -71,14 +71,89 @@ exports.createCollection = async(req,res)=>{
 if (description && description.length < 20) {  // Optional: Validate description length if there is one
     return res.status(400).send('Description too short');
 }
-const collectionId = await Member.createCollection(memberId, name, description);
-res.json({ message: 'Collection created successfully', collectionId: collectionId });
+let collectionId;
+if (existingCollectionId) {
+  // Add to existing collection
+  collectionId = existingCollectionId;
+  // Add your logic to add cards to the existing collection here if necessary
+} else {
+  // Create a new collection
+  collectionId = await Member.createCollection(memberId, name, description);
+}
+
+res.json({
+  message: existingCollectionId ? 'Added to existing collection successfully' : 'Collection created successfully',
+  collectionId: collectionId
+});
 
 } catch (error) {
+console.error(error);
+res.status(500).json({
+  message: 'Failed to create or add to collection',
+  error: error.message
+});
+}
+
+
+} 
+exports.getCollections = async (req, res) => {
+  try {
+      const { memberId, isLoggedIn } = req.session;
+
+      // Check if the user is logged in
+      if (!isLoggedIn || !memberId) {
+          return res.status(403).send('You must be logged in to view collections');
+      }
+      const collections = await Member.getCollectionsByMemberId(memberId);
+      res.json(collections);
+  } catch (error) {
       console.error(error);
-      res.status(500).json({ message: 'Failed to create collection', error: error.message });
+      res.status(500).json({
+          message: 'Failed to fetch collections',
+          error: error.message
+      });
   }
 };
+
+exports.addCardToCollection = async (req, res) => {
+  const { cardId, collectionId } = req.body;
+  const { memberId } = req.session;
+
+  try {
+    const existingCards = await Member.getCardIDsByCollectionId(collectionId, memberId);
+    if (existingCards.includes(cardId.toString())) {
+        return res.status(409).json({ message: 'Card is already in the collection' });
+    }
+
+      const result = await Member.addCardToCollection(collectionId, cardId, memberId);
+      if (result) {
+        res.status(201).json({ message: 'Card added to collection successfully' });
+    } else {
+        res.status(500).json({ message: 'Failed to add card to collection' });
+    }  } catch (error) {
+      console.error('Error adding card to collection:', error);
+      res.status(500).json({ message: 'Failed to add card to collection' });
+  }
+};
+
+exports.getCardIDsByCollectionId = async (req, res) => {
+  const { collectionId } = req.params; // Assuming collectionId is passed as a URL parameter
+  const { memberId } = req.session; // Assuming memberId is stored in session for logged-in user
+  console.log("memberId : ",memberId)  
+  try {
+      const cards = await Member.getCardIDsByCollectionId(collectionId, memberId);
+      if (cards.length === 0) {
+          res.status(404).json({ message: 'No cards found in this collection or collection not accessible' });
+      } else {
+          res.status(200).json(cards);
+      }
+  } catch (error) {
+      console.error('Error fetching cards from collection:', error);
+      res.status(500).json({ message: 'Failed to fetch cards from collection' });
+  }
+};
+
+
 exports.postComment = async(req,res)=>{
   try{
   const { comment } = req.body;
@@ -106,16 +181,11 @@ exports.postComment = async(req,res)=>{
 
 };
 
-
-
-
-
-
-
-
 exports.getSessionStatus = (req, res) => {
   res.json({
-      isLoggedIn: req.session.isLoggedIn || false
+      isLoggedIn: req.session.isLoggedIn || false,
+      memberId: req.session.memberId
+
   });
 }; 
 

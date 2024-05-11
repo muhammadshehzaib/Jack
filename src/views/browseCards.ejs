@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,65 +8,68 @@
     <!-- Add your CSS and JavaScript links here -->
     <link href="/public/css/browsecards.css" rel="stylesheet">
     <link rel="stylesheet" href="../../public/css/card.css">
-<link rel="stylesheet" href="../../public/css/partials/navbar.css">
+    <link rel="stylesheet" href="../../public/css/partials/navbar.css">
 
 </head>
+
 <body>
     <%- include('partials/navbar.ejs') %>
-    <div class="container">
-        <div class="input-group mb-3">
-          <input type="search" id="searchInput" class="form-control" placeholder="Pokemon Name" aria-label="Pokemon's Name">
-          <button class="btn btn-outline-secondary" type="button" id="searchButton">Search</button>
-          
-        </div>
+        <div class="container">
+            <div class="input-group mb-3">
+                <input type="search" id="searchInput" class="form-control" placeholder="Pokemon Name"
+                    aria-label="Pokemon's Name">
+                <button class="btn btn-outline-secondary" type="button" id="searchButton">Search</button>
 
-        <div class="dropdown">
-            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-              Filters
-            </button>
-            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-              <li><a class="dropdown-item" href="#" onclick="sortCardsByName()">a-z</a></li>
-              <li><a class="dropdown-item" href="#"  onclick="sortCardsByNameDesc()">z-a</a></li>
-            </ul>
-          </div>
-          
+            </div>
+
+            <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1"
+                    data-bs-toggle="dropdown" aria-expanded="false">
+                    Filters
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                    <li><a class="dropdown-item" href="#" onclick="sortCardsByName()">a-z</a></li>
+                    <li><a class="dropdown-item" href="#" onclick="sortCardsByNameDesc()">z-a</a></li>
+                </ul>
+            </div>
+
         </div>
-          <div id="cardsContainer" class="card-container" >
+        <div id="cardsContainer" class="card-container">
             <!-- Cards will be dynamically inserted here -->
         </div>
 
-    <%- include('partials/gallery.ejs') %>
-  <%- include('partials/footer.ejs') %>
-  
-  <script>
-    // Define the searchCards function
-    function searchCards() {
-        const searchTerm = document.getElementById('searchInput').value;
-        const apiUrl = `https://api.tcgdex.net/v2/en/hp/${encodeURIComponent(searchTerm)}`;
+        <%- include('partials/gallery.ejs') %>
+            <%- include('partials/footer.ejs') %>
 
-        fetch(apiUrl)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(data => {
-                const cards = data.cards.flat();  // Access the 'cards' array from the response
-                const container = document.getElementById('cardsContainer');
-                const galleryContainer = document.getElementById('gallery');
+                <script>
+                    // Define the searchCards function
+                    function searchCards() {
+                        const searchTerm = document.getElementById('searchInput').value;
+                        const apiUrl = `https://api.tcgdex.net/v2/en/hp/${encodeURIComponent(searchTerm)}`;
 
-                container.innerHTML = ''; // Clear previous results
-                galleryContainer.style.display = 'none'; // Hide gallery during search
+                        fetch(apiUrl)
+                            .then(response => {
+                                if (!response.ok) {
+                                    throw new Error('Network response was not ok');
+                                }
+                                return response.json();
+                            })
+                            .then(data => {
+                                const cards = data.cards.flat();  // Access the 'cards' array from the response
+                                const container = document.getElementById('cardsContainer');
+                                const galleryContainer = document.getElementById('gallery');
 
-                // Check if cards is an array and has content
-                if (Array.isArray(cards) && cards.length > 0) {
-                  const slicedCards = cards.slice(0, 20); // Limit the results to 20 cards
+                                container.innerHTML = ''; // Clear previous results
+                                galleryContainer.style.display = 'none'; // Hide gallery during search
 
-                  slicedCards.forEach(card => {
-                        const cardElement = document.createElement('div');
-                        cardElement.className = 'cards';
-                        cardElement.innerHTML = `
+                                // Check if cards is an array and has content
+                                if (Array.isArray(cards) && cards.length > 0) {
+                                    const slicedCards = cards.slice(0, 20); // Limit the results to 20 cards
+
+                                    slicedCards.forEach(card => {
+                                        const cardElement = document.createElement('div');
+                                        cardElement.className = 'cards';
+                                        cardElement.innerHTML = `
                         <a href="/card/${card.id}">
                                     <div class="card" style="width: 18rem;">
                                         <img src="https://assets.tcgdex.net/en/swsh/swsh3/136/high.webp
@@ -79,29 +83,33 @@
                                             </div>
                                         </div>
                                     </div>
+                                   
                                     <div class="heart-icon">
                                         <img src="../../../public/Images/heart.png">
                                     </div>
+                                    
                             </a>`;
-                        container.appendChild(cardElement);
-                    });
-                } else {
-                    container.innerHTML = '<p>No results found.</p>';
-                }
-            })
-            .catch(error => {
-                console.error('Failed to fetch:', error);
-                document.getElementById('cardsContainer').innerHTML = '<p>Error loading the data.</p>';
-            });
-    }
+                                        container.appendChild(cardElement);
+                                    });
+                                } else {
+                                    container.innerHTML = '<p>No results found.</p>';
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Failed to fetch:', error);
+                                document.getElementById('cardsContainer').innerHTML = '<p>Error loading the data.</p>';
+                            });
+                    }
 
-    document.getElementById('searchButton').addEventListener('click', searchCards);
+                    document.getElementById('searchButton').addEventListener('click', searchCards);
 
 
 
-    
-</script>
+
+
+                </script>
 
 
 </body>
+
 </html>

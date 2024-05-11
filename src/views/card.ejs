@@ -134,7 +134,6 @@
                     const card = await response.json();
 
 
-                    fetchComments();  // Ensure this is the last line in your try block
 
 
                     console.log(card);
@@ -267,24 +266,23 @@
                 container.innerHTML = '';  // Clear existing comments
 
 
-                if (comments.length === 0) {
+                if (comments?.length === 0) {
                     const noCommentsDiv = document.createElement('div');
                     noCommentsDiv.textContent = 'No comments yet. Be the first to comment!';
                     container.appendChild(noCommentsDiv);
                     return;
                 }
-                console.log("comments.length : ", comments.length)
+                else {
+                    comments?.forEach(comment => {
 
-
-                comments?.forEach(comment => {
-
-                    const div = document.createElement('div');
-                    for (let i = 0; i < comments.length; i++) {
-                        div.textContent = comments[i]?.Comment;
-                        console.log("Comment by frontend : ", comments[i].Comment)
-                    }
-                    container.appendChild(div);
-                });
+                        const div = document.createElement('div');
+                        for (let i = 0; i < comments.length; i++) {
+                            div.textContent = comments[i]?.Comment;
+                            console.log("Comment by frontend : ", comments[i].Comment)
+                        }
+                        container.appendChild(div);
+                    });
+                }
             }
 
         </script>
